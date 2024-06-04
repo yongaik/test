@@ -1,0 +1,22 @@
+---
+all:
+  children:
+    switches:
+      hosts:
+        core1: 
+          ansible_host: 10.251.14.102
+        access1:
+          ansible_host: 10.251.14.103
+    cloud:
+      hosts:
+        central:
+          ansible_host: apigw-prod2.central.arubanetworks.com
+    wireless:
+      hosts:
+        mc1: 
+          ansible_host: 10.1.149.100
+    aaa:
+      hosts:
+        cp1:
+          ansible_host: 10.251.1.105
+...

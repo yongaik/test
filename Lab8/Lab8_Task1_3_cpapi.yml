@@ -1,0 +1,65 @@
+---
+- hosts: aaa
+  gather_facts: no
+  roles:
+    - arubanetworks.aos_wlan_role
+  tasks:
+    - name: "Check status"
+      uri:
+        url: "https://{{ ansible_host }}/api-docs"
+        validate_certs: false
+
+    - name: "Authentication"
+      uri:
+        url: "https://{{ ansible_host }}/api/oauth"
+        method: POST
+        validate_certs: false
+        body_format: json
+        body: '{
+          "grant_type": "client_credentials",
+          "client_id": "<Client_id>",
+          "client_secret": "<Client_secret>"          
+          }'
+      register: auth
+
+    - name: "Show auth"
+      debug:
+        msg: "{{ auth.json }}"
+
+    - name: "Get Endpoints"
+      uri:
+        url: "https://{{ ansible_host }}/api/endpoint"
+        method: GET        
+        validate_certs: false
+        headers: 
+          Authorization: "Bearer {{ auth.json.access_token }}"
+          Accept: "application/json"
+      register: var1
+
+    - name: "Show endpoints"
+      debug:
+        msg: "{{ var1.json._embedded }}"
+     
+    - name: "Add endpoint"
+      uri:
+        url: "https://{{ ansible_host }}/api/endpoint"
+        method: POST
+        validate_certs: false
+        body_format: json
+        body: '{
+          "id": 3003,
+          "mac_address": "02:00:00:00:00:13",
+          "status": "Unknown"
+          }'
+        headers: 
+          Authorization: "Bearer {{ auth.json.access_token }}"
+          Accept: "application/json"
+      register: var2
+      ignore_errors: yes
+      failed_when: (var2.status not in [201,422])
+      changed_when: (var2.status == 201)
+
+    - name: "Show add endpoint result"
+      debug:
+        msg: "{{ var2.status }}"
+...

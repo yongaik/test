@@ -1,0 +1,109 @@
+---
+- hosts: cloud
+  gather_facts: no
+  roles:
+    - arubanetworks.aruba_central_role
+  tasks:
+    - name: "Get groups"
+      central_groups:
+        action: get_groups
+        limit: 20
+        offset: 0
+      register: var1
+
+    - name: "Show groups"
+      debug:
+        msg: "{{ var1 }}"
+
+    - name: "Get sites"
+      central_sites:
+        action: get_multiple_sites
+        calculate_total: True
+        sort: +site_name
+        offset: 0
+        limit: 20
+      register: var2
+
+    - name: "Show sites"
+      debug:
+        msg: "{{ var2 }}"
+
+    - name: "Get running config"
+      central_devices:
+        action: get_running_config
+        device_serial: "{{ item }}"
+      loop: "{{ ap_list }}"
+      register: var3
+
+    - name: "Show running config"
+      debug:
+        msg: "{{ var3 }}"
+
+    - name: "Check status"
+      uri:
+        url: "https://{{ ansible_host }}/swagger/apps/nms"
+
+    - name: "Get APs"
+      uri:
+        url: "https://{{ ansible_host }}/monitoring/v2/aps"
+        method: GET        
+        headers:
+          Authorization: "Bearer {{ ansible_httpapi_central_access_token }}"
+      register: var4
+
+    - name: "Show APs"
+      debug:
+        msg: "{{ item.serial }}"
+      loop: "{{ var4.json.aps }}"
+      when: item.status == "Up"
+
+    - name: "Create new Group URI"
+      uri:
+        url: "https://{{ ansible_host }}/configuration/v2/groups"
+        method: POST
+        body_format: json
+        body: 
+          '{"group": "{{ Group_name }}",
+          "group_attributes": {"group_password": "aruba123",
+          "template_info": {"Wired": false,"Wireless": true}}}'
+        headers:
+          Authorization: "Bearer {{ ansible_httpapi_central_access_token }}"
+      vars:
+        Group_name: Group1
+      register: gr_add_res
+      ignore_errors: yes
+      when: "ansible_host == 'test'"
+
+    - name: "Delete Group URI"
+      uri:
+        url: "https://{{ ansible_host }}/configuration/v1/groups/{{ Group_name }}"
+        method: DELETE
+        body_format: json
+        headers:
+          Authorization: "Bearer {{ ansible_httpapi_central_access_token }}"
+      vars:
+        Group_name: Group1
+      ignore_errors: yes
+      register: gr_del_res
+      when: "ansible_host == 'test'"
+
+    - name: "Create new Group"
+      central_groups:
+        action: create
+        group_name: "{{ Group_name }}"
+        group_attributes:
+          group_password: aruba123
+          template_group:
+            wired: false
+            wireless: true
+      vars:
+        Group_name: Group1
+
+    - name: "Delete Group"
+      central_groups:
+        action: delete
+        group_name: "{{ Group_name }}"
+      vars:
+        Group_name: Group1
+
+...

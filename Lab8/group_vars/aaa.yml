@@ -1,0 +1,7 @@
+
+ansible_user: admin
+ansible_password: eTIPS123
+ansible_connection: httpapi
+ansible_network_os: aos
+ansible_httpapi_use_ssl: True
+ansible_httpapi_validate_certs: False

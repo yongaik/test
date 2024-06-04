@@ -1,0 +1,6 @@
+hostname "gw1"
+
+!
+vlan 101
+!
+vlan 102
