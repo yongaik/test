@@ -41,7 +41,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://10.1.X9.100:4343/v1/api/login?username=admin&password=aruba123",
+					"raw": "https://10.1.X9.101:4343/v1/api/login?username=admin&password=aruba123",
 					"protocol": "https",
 					"host": [
 						"10",
@@ -96,7 +96,7 @@
 					}
 				],
 				"url": {
-					"raw": "https://10.1.X9.100:4343/v1/configuration/object/vlan_name?config_path=/mm/mynode&UIDARUBA={{SESSION}}",
+					"raw": "https://10.1.X9.101:4343/v1/configuration/object/vlan_name?config_path=/mm/mynode&UIDARUBA={{SESSION}}",
 					"protocol": "https",
 					"host": [
 						"10",
@@ -131,7 +131,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://10.1.X9.100:4343/v1/configuration/object/vlan_id?config_path=/mm/mynode&UIDARUBA={{SESSION}}",
+					"raw": "https://10.1.X9.101:4343/v1/configuration/object/vlan_id?config_path=/mm/mynode&UIDARUBA={{SESSION}}",
 					"protocol": "https",
 					"host": [
 						"10",
@@ -181,7 +181,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://10.1.X9.100:4343/v1/configuration/object/vlan_id?config_path=%2Fmm&json=payload&UIDARUBA={{SESSION}}",
+					"raw": "https://10.1.X9.101:4343/v1/configuration/object/vlan_id?config_path=%2Fmm&json=payload&UIDARUBA={{SESSION}}",
 					"protocol": "https",
 					"host": [
 						"10",
@@ -220,7 +220,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "https://10.1.X9.100:4343/v1/configuration/object/write_memory?config_path=mm&UIDARUBA={{SESSION}}\n",
+					"raw": "https://10.1.X9.101:4343/v1/configuration/object/write_memory?config_path=mm&UIDARUBA={{SESSION}}\n",
 					"protocol": "https",
 					"host": [
 						"10",
